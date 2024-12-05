@@ -29,8 +29,45 @@ io.on("connection", (socket) => {
   //닉네임 설정
   socket.on("set_nickname", (nickname) => {
     users[socket.id] = { nickname, room: null };
-    socket.emit("nickname_set", nickname);
+    socket.emit("nickname_set", nickname); //닉네임 설정 확인 메시지 보내기
     console.log(`${socket.id} set nickname : ${nickname}`);
+  });
+
+  //방 입장
+  socket.on("join_room", (room) => {
+    const user = users[socket.id];
+    if (user) {
+      socket.leave(user.room);
+      socket.join(room);
+      user.room = room;
+      console.log(`User ${user.nickname} joined room: ${room}`);
+      socket.emit("room_join", room);
+      io.to(room).emit("room_message", `${user.nickname} joined the room.`); // 방에 있는 모든 사용자에게 알림
+    }
+  });
+
+  // 채팅 전송
+  socket.on("room_message", (message) => {
+    console.log(users);
+    const user = users[socket.id];
+    if (user && user.room) {
+      io.to(user.room).emit("room_message", `${user.nickname}: ${message}`);
+    }
+  });
+
+  //private채팅 전송
+  socket.on("private_message", ({ to, message }) => {
+    const fromUser = users[socket.id];
+    const toSocketId = Object.keys(users).find(
+      (socketId) => users[socketId].nickname === to
+    );
+
+    if (toSocketId) {
+      socket.to(toSocketId).emit("private_message", {
+        from: fromUser.nickname,
+        message,
+      });
+    }
   });
 
   //사용자 연결 해제

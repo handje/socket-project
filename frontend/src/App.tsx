@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { connect, io, Socket } from "socket.io-client";
+import ChatRoom from "./ChatRoom";
 
 const App = () => {
   //socket객체 상태 관리(연결 관리)
@@ -9,7 +10,9 @@ const App = () => {
 
   //닉네임, 룸 관리
   const [nickname, setNickname] = useState("");
+  const [hasName, setHasName] = useState(false);
   const [room, setRoom] = useState("");
+  const [isInRoom, setIsInRoom] = useState(false);
 
   //==함수==
 
@@ -26,16 +29,31 @@ const App = () => {
   const handleSetNickname = () => {
     if (socket && nickname.trim()) {
       socket.emit("set_nickname", nickname);
+      setHasName(true);
     }
   };
-  //닉네임 설정 결과 리스닝
+
+  //room입장 요청
+  const handleJoinRoom = () => {
+    if (socket && room.trim()) {
+      socket.emit("join_room", room);
+      setIsInRoom(true);
+    }
+  };
+
+  //닉네임 설정 & 방 입장 결과 리스닝
   useEffect(() => {
     if (socket) {
+      console.log("useEffect");
       socket.on("nickname_set", (nickname) => {
         console.log(`Nickname set successfully: ${nickname}`);
       });
+      socket.on("room_join", (room) => {
+        console.log(`Room ${room} join successfully`);
+      });
       return () => {
         socket.off("nickname_set");
+        socket.off("room_join");
       };
     }
   }, [socket]);
@@ -48,15 +66,31 @@ const App = () => {
       )}
       {connected && (
         <>
-          <div>
-            <input
-              placeholder="Enter your nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-            <button onClick={handleSetNickname}>Set Nickname</button>
-          </div>
+          {!hasName && (
+            <div>
+              <input
+                placeholder="Enter your nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
+              <button onClick={handleSetNickname}>Set Nickname</button>
+            </div>
+          )}
+          {hasName && (
+            <div>
+              <h2>Welcome,{nickname}</h2>
+              <input
+                placeholder="Enter room name"
+                value={room}
+                onChange={(e) => setRoom(e.target.value)}
+              />
+              <button onClick={handleJoinRoom}>Join Room</button>
+            </div>
+          )}
         </>
+      )}
+      {hasName && isInRoom && socket && (
+        <ChatRoom socket={socket} room={room} nickname={nickname} />
       )}
     </>
   );
