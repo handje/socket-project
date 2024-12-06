@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+//hook적용
+import { useState } from "react";
 
-import { useSocket, useSocketEmit, useSocketEvent } from "./hooks";
+import { useSocket, useSocketEmit, useSocketEvent } from "../../hooks";
 
-const Home: React.FC = () => {
+const ChatMainH = () => {
   const [nickname, setNickname] = useState<string>("");
   const [room, setRoom] = useState<string>("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -68,4 +69,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default ChatMainH;
