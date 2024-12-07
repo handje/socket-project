@@ -1,8 +1,11 @@
+import "../styles/chatting.css";
+import ChatMain from "../components/Chatting/ChatMain";
+
 const Chatting = () => {
   return (
-    <>
-      <h1>Chatting Component</h1>
-    </>
+    <div className="flex container" id="chatting">
+      <ChatMain />
+    </div>
   );
 };
 export default Chatting;

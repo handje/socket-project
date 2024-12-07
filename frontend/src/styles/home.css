@@ -1,15 +1,6 @@
-.flex {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+@import url("./common.css");
 
-.container {
-  width: 100%;
-}
-
-button {
+#home button {
   border: 2px solid black;
   border-radius: 10%;
   padding: 10px;

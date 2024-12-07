@@ -4,9 +4,9 @@ import "../styles/home.css";
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex" id="home">
+    <div className="flex container" id="home">
       <h1>Socket Exercise</h1>
-      <div className="flex container">
+      <div className="flex box">
         <button
           onClick={() => {
             navigate("/chatting");

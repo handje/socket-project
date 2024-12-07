@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { connect, io, Socket } from "socket.io-client";
+import { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
 import ChatRoom from "./ChatRoom";
 
 const ChatMain = () => {
@@ -9,42 +9,46 @@ const ChatMain = () => {
   const [connected, setConnected] = useState(false);
 
   //닉네임, 룸 관리
+  const nameInput = useRef<HTMLInputElement>(null);
+  const roomInput = useRef<HTMLInputElement>(null);
   const [nickname, setNickname] = useState("");
-  const [hasName, setHasName] = useState(false);
   const [room, setRoom] = useState("");
-  const [isInRoom, setIsInRoom] = useState(false);
-
-  //==함수==
 
   //서버와 socket.io 연결 설정
   const connectToServer = () => {
     if (!socket) {
       const newSocket = io("http://localhost:3000");
-      setSocket(newSocket);
-      setConnected(true);
+      newSocket.on("connect", () => {
+        console.log("connected");
+        setSocket(newSocket);
+        setConnected(true);
+      });
     }
   };
 
   //닉네임 설정
   const handleSetNickname = () => {
-    if (socket && nickname.trim()) {
-      socket.emit("set_nickname", nickname);
-      setHasName(true);
+    const name = nameInput.current?.value.trim();
+    if (socket && name) {
+      socket.emit("set_nickname", name);
+      setNickname(name);
     }
   };
 
   //room입장 요청
   const handleJoinRoom = () => {
-    if (socket && room.trim()) {
+    const room = roomInput.current?.value.trim();
+    if (socket && room) {
       socket.emit("join_room", room);
-      setIsInRoom(true);
+      setRoom(room);
     }
   };
+
+  useEffect(() => {}, []);
 
   //닉네임 설정 & 방 입장 결과 리스닝
   useEffect(() => {
     if (socket) {
-      console.log("useEffect");
       socket.on("nickname_set", (nickname) => {
         console.log(`Nickname set successfully: ${nickname}`);
       });
@@ -60,37 +64,36 @@ const ChatMain = () => {
 
   return (
     <>
-      <h1>Socket Chat</h1>
       {!connected && (
-        <button onClick={connectToServer}>Connect to Server</button>
+        <button id="connectBtn" onClick={connectToServer}>
+          Connect
+        </button>
       )}
+      {nickname && <h2>{`Welcome,${nickname}`}</h2>}
       {connected && (
-        <>
-          {!hasName && (
-            <div>
-              <input
-                placeholder="Enter your nickname"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-              <button onClick={handleSetNickname}>Set Nickname</button>
+        <div className="box">
+          {!nickname && (
+            <div className="flex">
+              <div className="inputBox">
+                <input placeholder="Enter your nickname" ref={nameInput} />
+                <button onClick={handleSetNickname}>OK</button>
+              </div>
             </div>
           )}
-          {hasName && (
-            <div>
-              <h2>Welcome,{nickname}</h2>
-              <input
-                placeholder="Enter room name"
-                value={room}
-                onChange={(e) => setRoom(e.target.value)}
-              />
-              <button onClick={handleJoinRoom}>Join Room</button>
+          {nickname && !room && (
+            <div className="flex">
+              <div className="inputBox">
+                <input placeholder="Enter room name" ref={roomInput} />
+                <button onClick={handleJoinRoom}>Join</button>
+              </div>
             </div>
           )}
-        </>
+        </div>
       )}
-      {hasName && isInRoom && socket && (
-        <ChatRoom socket={socket} room={room} nickname={nickname} />
+      {nickname && room && socket && (
+        <>
+          <ChatRoom socket={socket} room={room} nickname={nickname} />
+        </>
       )}
     </>
   );

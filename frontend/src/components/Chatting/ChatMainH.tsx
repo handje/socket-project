@@ -37,8 +37,7 @@ const ChatMainH = () => {
 
   // 메시지 목록 렌더링
   return (
-    <div>
-      <h1>React Socket.IO Chat</h1>
+    <>
       <div>
         <input
           type="text"
@@ -65,7 +64,7 @@ const ChatMainH = () => {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

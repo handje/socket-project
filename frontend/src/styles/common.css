@@ -1,0 +1,24 @@
+.flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.flex-row {
+  display: flex;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+
+.box {
+  width: 100%;
+}
+
+#layout.flex {
+  align-items: flex-start;
+}

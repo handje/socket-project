@@ -1,0 +1,77 @@
+@import url(./common.css);
+
+#chatting > h1 {
+  position: fixed;
+  left: 0;
+  top: 20px;
+}
+
+#chatting.flex {
+  align-items: center;
+}
+
+#connectBtn {
+  background-color: cadetblue;
+  width: 40%;
+  height: 30%;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  font-weight: 900;
+  font-size: 50px;
+}
+
+#connectBtn:hover {
+  background-color: rgb(57, 94, 95);
+}
+
+.inputBox {
+  display: flex;
+}
+
+.inputBox > input {
+  line-height: 30px;
+  font-size: x-large;
+  padding: 5px;
+  border: none;
+  border-bottom: 5px solid cadetblue;
+  margin-right: 10px;
+}
+
+.inputBox > button {
+  height: 30px;
+  background-color: cadetblue;
+  font-size: 20px;
+  color: white;
+  border-radius: 5%;
+  padding: 10px;
+}
+
+#messageBox {
+  border: 1px solid cadetblue;
+  padding: 10px;
+  height: 300px;
+  overflow-y: auto;
+}
+
+#chattingBox .inputBox {
+  margin: 10px 0px;
+  text-align: end;
+}
+
+#chattingBox .inputBox > input {
+  border: 2px solid cadetblue;
+}
+
+#msg {
+  width: 100%;
+}
+
+#privateId {
+  width: 20%;
+  font-size: medium;
+}
+
+#privateMsg {
+  width: 100%;
+}

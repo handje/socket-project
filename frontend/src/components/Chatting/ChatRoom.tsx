@@ -52,43 +52,38 @@ const ChatRoom = ({
     }
   };
   return (
-    <>
-      <h1>ChatRoom {room}</h1>
-      <p>My Nickname</p>
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          height: "300px",
-          overflowY: "scroll",
-        }}
-      >
+    <div id="chattingBox" className="container">
+      <h1>Room : {room}</h1>
+      <div id="messageBox">
         {messages.map((msg, index) => (
           <div key={index}>{msg}</div>
         ))}
       </div>
-      <input
-        type="text"
-        placeholder="Room message"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button onClick={sendRoomMessage}>Send to Room</button>
-      <hr />
-      <input
-        type="text"
-        placeholder="Recipient ID"
-        value={privateTo}
-        onChange={(e) => setPrivateTo(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Private message"
-        value={privateInput}
-        onChange={(e) => setPrivateInput(e.target.value)}
-      />
-      <button onClick={sendPrivateMessage}>Send Private</button>
-    </>
+      <div className="inputBox">
+        <input
+          id="msg"
+          placeholder="Room message"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button onClick={sendRoomMessage}>Send</button>
+      </div>
+      <div id="private" className="inputBox">
+        <input
+          id="privateId"
+          placeholder="Recipient ID"
+          value={privateTo}
+          onChange={(e) => setPrivateTo(e.target.value)}
+        />
+        <input
+          id="privateMsg"
+          placeholder="Private message"
+          value={privateInput}
+          onChange={(e) => setPrivateInput(e.target.value)}
+        />
+        <button onClick={sendPrivateMessage}>Send</button>
+      </div>
+    </div>
   );
 };
 export default ChatRoom;
