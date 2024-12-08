@@ -42,7 +42,19 @@ io.on("connection", (socket) => {
       user.room = room;
       console.log(`User ${user.nickname} joined room: ${room}`);
       socket.emit("room_join", room);
-      io.to(room).emit("room_message", `${user.nickname} joined the room.`); // 방에 있는 모든 사용자에게 알림
+      socket.broadcast
+        .to(room)
+        .emit("room_message", `${user.nickname} joined the room.`); // 방에 있는 모든 사용자에게 알림
+    }
+  });
+
+  //방 퇴장
+  socket.on("exit_room", (room) => {
+    const user = users[socket.id];
+    if (user) {
+      socket.leave(user.room);
+      console.log(`User ${user.nickname} exited room: ${room}`);
+      io.to(room).emit("room_message", `${user.nickname} exited the room.`); // 방에 있는 모든 사용자에게 알림
     }
   });
 
@@ -51,7 +63,7 @@ io.on("connection", (socket) => {
     console.log(users);
     const user = users[socket.id];
     if (user && user.room) {
-      io.to(user.room).emit("room_message", `${user.nickname}: ${message}`);
+      io.to(user.room).emit("room_message", `${user.nickname} : ${message}`);
     }
   });
 

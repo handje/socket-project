@@ -12,13 +12,13 @@
 
 #connectBtn {
   background-color: cadetblue;
-  width: 40%;
-  height: 30%;
-  border-radius: 50%;
   text-align: center;
   color: white;
-  font-weight: 900;
-  font-size: 50px;
+  font-weight: 00;
+  font-size: 30px;
+  border-radius: 10%;
+  padding: 5px;
+  margin-bottom: 20px;
 }
 
 #connectBtn:hover {
@@ -45,6 +45,14 @@
   color: white;
   border-radius: 5%;
   padding: 10px;
+}
+
+#roomTool {
+  justify-content: space-between;
+}
+
+#roomTool > button {
+  color: red;
 }
 
 #messageBox {

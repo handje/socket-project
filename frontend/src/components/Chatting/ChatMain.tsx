@@ -14,6 +14,11 @@ const ChatMain = () => {
   const [nickname, setNickname] = useState("");
   const [room, setRoom] = useState("");
 
+  useEffect(() => {
+    nameInput.current?.focus();
+    roomInput.current?.focus();
+  }, [connected, nickname, room]);
+
   //서버와 socket.io 연결 설정
   const connectToServer = () => {
     if (!socket) {
@@ -23,6 +28,15 @@ const ChatMain = () => {
         setSocket(newSocket);
         setConnected(true);
       });
+    }
+  };
+  const disconnectToServer = () => {
+    if (socket) {
+      socket.disconnect();
+      setSocket(null);
+      setConnected(false);
+      setNickname("");
+      setRoom("");
     }
   };
 
@@ -44,8 +58,6 @@ const ChatMain = () => {
     }
   };
 
-  useEffect(() => {}, []);
-
   //닉네임 설정 & 방 입장 결과 리스닝
   useEffect(() => {
     if (socket) {
@@ -64,9 +76,13 @@ const ChatMain = () => {
 
   return (
     <>
-      {!connected && (
+      {!connected ? (
         <button id="connectBtn" onClick={connectToServer}>
           Connect
+        </button>
+      ) : (
+        <button id="connectBtn" onClick={disconnectToServer}>
+          Disconnect
         </button>
       )}
       {nickname && <h2>{`Welcome,${nickname}`}</h2>}
@@ -74,25 +90,34 @@ const ChatMain = () => {
         <div className="box">
           {!nickname && (
             <div className="flex">
-              <div className="inputBox">
+              <form className="inputBox">
                 <input placeholder="Enter your nickname" ref={nameInput} />
-                <button onClick={handleSetNickname}>OK</button>
-              </div>
+                <button type="submit" onClick={handleSetNickname}>
+                  OK
+                </button>
+              </form>
             </div>
           )}
           {nickname && !room && (
             <div className="flex">
-              <div className="inputBox">
+              <form className="inputBox">
                 <input placeholder="Enter room name" ref={roomInput} />
-                <button onClick={handleJoinRoom}>Join</button>
-              </div>
+                <button type="submit" onClick={handleJoinRoom}>
+                  Join
+                </button>
+              </form>
             </div>
           )}
         </div>
       )}
       {nickname && room && socket && (
         <>
-          <ChatRoom socket={socket} room={room} nickname={nickname} />
+          <ChatRoom
+            socket={socket}
+            room={room}
+            nickname={nickname}
+            setRoom={setRoom}
+          />
         </>
       )}
     </>
